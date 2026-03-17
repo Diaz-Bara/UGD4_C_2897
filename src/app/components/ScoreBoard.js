@@ -1,53 +1,34 @@
 import React from 'react';
-import { FaClock, FaMousePointer, FaCheck, FaSyncAlt, FaRedo } from 'react-icons/fa';
+import { FaClock, FaMousePointer, FaCheck, FaSyncAlt } from 'react-icons/fa';
 
-function ScoreBoard({ moves, matchedCount, totalPairs, onReset, timer }) {
-  const isGameComplete = matchedCount === totalPairs;
-
+export default function ScoreBoard({ moves, matchedCount, totalPairs, onReset, timer }) {
   return (
-    <div className="text-center mb-6">
-      <div className="flex justify-center gap-4 mb-4">
-        {/* Timer Box */}
-        <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg min-w-[100px]">
-          <p className="text-sm text-indigo-200 flex items-center justify-center gap-1">
-            <FaClock className="text-indigo-300" /> Waktu
-          </p>
-          <p className="text-2xl font-bold text-white font-mono">{timer}</p>
-        </div>
-
-        <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg min-w-[100px]">
-          <p className="text-sm text-indigo-200 flex items-center justify-center gap-1">
-            <FaMousePointer className="text-indigo-300" /> Klik
-          </p>
-          <p className="text-2xl font-bold text-white">{moves}</p>
-        </div>
-
-        <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg min-w-[100px]">
-          <p className="text-sm text-indigo-200 flex items-center justify-center gap-1">
-            <FaCheck className="text-indigo-300" /> Progres
-          </p>
-          <p className="text-2xl font-bold text-white">{matchedCount}/{totalPairs}</p>
-        </div>
+    <div className="w-full max-w-xl flex flex-col items-center">
+      {/* Container Panel Statistik */}
+      <div className="grid grid-cols-3 gap-3 w-full mb-6">
+        <StatBox label="WAKTU" value={timer} icon={<FaClock className="text-indigo-400" />} />
+        <StatBox label="PERCOBAAN" value={moves} icon={<FaMousePointer className="text-indigo-400" />} />
+        <StatBox label="DITEMUKAN" value={`${matchedCount}/${totalPairs}`} icon={<FaCheck className="text-indigo-400" />} />
       </div>
 
-      {isGameComplete && (
-        <div className="mb-4">
-           <p className="text-yellow-300 font-bold text-xl animate-pulse">
-            🎉 Luar Biasa!
-          </p>
-          <p className="text-white text-sm">Selesai dalam {timer} dengan {moves} klik.</p>
-        </div>
-      )}
-
+      {/* Tombol Acak Ulang - Berdiri Sendiri */}
       <button
         onClick={onReset}
-        className="px-6 py-2 bg-yellow-400 text-indigo-900 font-bold rounded-full hover:bg-yellow-300 transition-all duration-200 shadow-lg flex items-center gap-2 mx-auto active:scale-95"
+        className="px-10 py-3 bg-yellow-400 text-[#0f0c29] font-extrabold rounded-full flex items-center justify-center gap-2 hover:bg-yellow-300 transition-all active:scale-95 shadow-[0_0_20px_rgba(250,204,21,0.4)] uppercase text-sm tracking-wider"
       >
-        {isGameComplete ? <FaRedo /> : <FaSyncAlt />}
-        {isGameComplete ? 'Main Lagi' : 'Reset Game'}
+        <FaSyncAlt /> Acak Ulang
       </button>
     </div>
   );
 }
 
-export default ScoreBoard;
+function StatBox({ label, value, icon }) {
+  return (
+    <div className="bg-[#2a2a4a]/60 backdrop-blur-md border border-white/10 p-5 rounded-[2rem] text-center flex flex-col items-center justify-center min-h-[110px]">
+      <p className="text-[10px] font-bold text-gray-400 flex items-center gap-2 mb-2 tracking-[0.2em]">
+        {icon} {label}
+      </p>
+      <p className="text-3xl font-bold text-white tabular-nums tracking-tight">{value}</p>
+    </div>
+  );
+}

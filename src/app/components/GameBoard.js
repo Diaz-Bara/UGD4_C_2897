@@ -1,10 +1,9 @@
 import React from 'react';
 import Card from './Card';
 
-function GameBoard({ cards, flippedCards, matchedCards, onFlip }) {
+export default function GameBoard({ cards, flippedCards, matchedCards, onFlip, gridCols }) {
   return (
-    
-    <div className="grid grid-cols-4 gap-4 justify-items-center">
+    <div className={`grid ${gridCols} gap-4`}>
       {cards.map(card => (
         <Card
           key={card.id}
@@ -17,5 +16,3 @@ function GameBoard({ cards, flippedCards, matchedCards, onFlip }) {
     </div>
   );
 }
-
-export default GameBoard;

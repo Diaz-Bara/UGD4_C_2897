@@ -36,3 +36,20 @@ body {
 .animate-bounce-once {
   animation: bounce-once 0.3s ease-out;
 }
+
+/* Animasi melayang halus */
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px); /* Naik 10 pixel */
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-floating {
+  animation: floating 3s ease-in-out infinite;
+}

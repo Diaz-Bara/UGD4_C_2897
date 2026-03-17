@@ -1,32 +1,24 @@
 import React from 'react';
-import { FaQuestion } from 'react-icons/fa';
 
-function Card({ card, isFlipped, isMatched, onFlip }) {
-  const handleClick = () => {
-    if (!isFlipped && !isMatched) {
-      onFlip(card.id);
-    }
-  };
-
+export default function Card({ card, isFlipped, isMatched, onFlip }) {
   const isOpen = isFlipped || isMatched;
   const IconComponent = card.icon;
 
-  const cardClass = `w-20 h-20 flex items-center justify-center text-3xl rounded-xl cursor-pointer select-none transition-all duration-300 transform 
-  ${isOpen ? 'bg-white shadow-md scale-100' : 'bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg hover:scale-105 hover:shadow-xl'} 
-  ${isMatched ? 'opacity-70 ring-2 ring-green-400' : ''}`;
-
   return (
-    <div onClick={handleClick} className={cardClass}>
-      {}
+    <div 
+      onClick={() => !isOpen && onFlip(card.id)}
+      className={`w-20 h-24 flex items-center justify-center rounded-2xl cursor-pointer transition-all duration-500 transform 
+      ${isOpen 
+        ? 'bg-white shadow-[0_0_20px_rgba(255,255,255,0.3)] rotate-0' 
+        : 'bg-gradient-to-br from-[#c471ed] via-[#f64f59] to-[#c471ed] shadow-lg hover:scale-105 -rotate-2'
+      } 
+      ${isMatched ? 'opacity-80 scale-95' : ''}`}
+    >
       {isOpen ? (
-        <span className="animate-bounce-once">
-          <IconComponent style={{ color: card.color }} />
-        </span>
+        <IconComponent className="text-4xl animate-bounce-once" style={{ color: card.color }} />
       ) : (
-        <FaQuestion className="text-white/60 text-xl" />
+        <span className="text-white text-3xl font-bold opacity-50">?</span>
       )}
     </div>
   );
 }
-
-export default Card;
