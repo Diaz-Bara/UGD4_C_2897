@@ -56,21 +56,29 @@ export default function Home() {
     return shufflearray(paired);
   };
 
-  // RESET GAME: Timer langsung jalan otomatis
+  // RESET GAME: Timer fiks langsung jalan tiap kali panggil reset
   const resetGame = () => {
+    setIsActive(false);
+    if (timerRef.current) clearInterval(timerRef.current);
+
     setCards(createCards(difficulty));
     setFlippedCards([]);
     setMatchedCards([]);
     setMoves(0);
     setSeconds(0);
-    setIsActive(true); // Langsung TRUE agar timer jalan saat load/reset
-    if (timerRef.current) clearInterval(timerRef.current);
+
+    // Kasih jeda 10ms biar React re-trigger state isActive
+    setTimeout(() => {
+      setIsActive(true);
+    }, 10);
   };
 
+  // Efek saat ganti level
   useEffect(() => {
     resetGame();
   }, [difficulty]);
 
+  // Logika Detak Timer
   useEffect(() => {
     if (isActive) {
       timerRef.current = setInterval(() => {
@@ -82,6 +90,7 @@ export default function Home() {
     return () => clearInterval(timerRef.current);
   }, [isActive]);
 
+  // Cek Match
   useEffect(() => {
     if (flippedCards.length === 2) {
       const [firstId, secondId] = flippedCards;
@@ -97,6 +106,7 @@ export default function Home() {
     }
   }, [flippedCards, cards]);
 
+  // Stop Timer kalau menang
   useEffect(() => {
     const currentPairs = DIFFICULTY_SETTINGS[difficulty].pairs;
     if (matchedCards.length > 0 && matchedCards.length === currentPairs * 2) {
@@ -115,25 +125,25 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0f0c29] bg-gradient-to-b from-[#0f0c29] via-[#1a1a3a] to-[#0f0c29] flex flex-col items-center justify-center p-4 font-sans antialiased">
       
-      {/* JUDUL: Ukuran besar, Floating, & Padding agar huruf 's' tidak kepotong */}
+      {/* JUDUL: pr-10 agar huruf 's' aman, animate-floating agar melayang */}
       <div className="flex items-center justify-center gap-4 mb-8 animate-floating w-full pr-4">
-        <div className="bg-yellow-400 p-2.5 rounded-xl shadow-[0_0_20px_rgba(250,204,21,0.5)]">
-          <span className="text-3xl">🃏</span>
+        <div className="bg-white/10 p-2.5 rounded-xl border border-white/20 shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+          <span className="text-3xl text-yellow-400">🃏</span>
         </div>
-        <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter italic drop-shadow-2xl pr-2">
+        <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter italic drop-shadow-2xl pr-10">
           Memory <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-300">Cards</span>
         </h1>
       </div>
 
       {/* DIFFICULTY TABS */}
-      <div className="flex bg-[#1a1a3a]/80 backdrop-blur-md p-1.5 rounded-full gap-2 mb-2 border border-white/5 shadow-2xl">
+      <div className="flex bg-[#1a1a3a]/90 backdrop-blur-xl p-1.5 rounded-full gap-2 mb-2 border border-white/10 shadow-2xl">
         {Object.keys(DIFFICULTY_SETTINGS).map((level) => (
           <button
             key={level}
             onClick={() => setDifficulty(level)}
-            className={`px-6 py-2.5 rounded-full text-[10px] font-black flex items-center gap-2 transition-all duration-300 uppercase tracking-widest ${
+            className={`px-7 py-2.5 rounded-full text-[11px] font-black flex items-center gap-2 transition-all duration-300 uppercase tracking-widest ${
               difficulty === level 
-              ? 'bg-yellow-400 text-[#0f0c29] shadow-lg shadow-yellow-400/30' 
+              ? 'bg-yellow-400 text-[#0f0c29] shadow-lg shadow-yellow-400/40 scale-105' 
               : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -143,12 +153,12 @@ export default function Home() {
         ))}
       </div>
 
-      {/* TULISAN GAME DIAZ BARA */}
-      <p className="mb-10 text-yellow-400/80 font-black italic uppercase tracking-[0.4em] text-[11px] animate-pulse drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]">
+      {/* IDENTITAS GAME DIAZ BARA */}
+      <p className="mb-10 text-yellow-400/70 font-black italic uppercase tracking-[0.5em] text-[10px] animate-pulse">
         Game Diaz Bara
       </p>
 
-      {/* STATS & RESET */}
+      {/* SCOREBOARD (Waktu, Klik, Progress) & Tombol Acak Ulang */}
       <ScoreBoard 
         moves={moves} 
         timer={formatTime(seconds)} 
@@ -157,8 +167,8 @@ export default function Home() {
         onReset={resetGame} 
       />
 
-      {/* GAME BOARD BOX */}
-      <div className="bg-white/5 backdrop-blur-md p-10 rounded-[45px] border border-white/10 shadow-2xl mt-12 w-full max-w-2xl flex justify-center">
+      {/* WADAH KARTU */}
+      <div className="bg-white/5 backdrop-blur-md p-10 rounded-[50px] border border-white/10 shadow-2xl mt-12 w-full max-w-2xl flex justify-center">
         <GameBoard 
           cards={cards} 
           flippedCards={flippedCards} 
@@ -168,9 +178,8 @@ export default function Home() {
         />
       </div>
 
-      {/* FOOTER */}
-      <p className="mt-12 text-indigo-400/30 text-[9px] font-bold tracking-[0.6em] uppercase">
-        Informatics • UAJY
+      <p className="mt-12 text-indigo-400/20 text-[9px] font-bold tracking-[0.7em] uppercase">
+        UAJY • Information Systems
       </p>
 
     </div>
